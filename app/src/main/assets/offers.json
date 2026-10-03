@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "offers": [
+    {
+      "id": "apple-cn-education",
+      "merchant": "Apple",
+      "title": "Apple 教育优惠",
+      "category": "数码",
+      "summary": "为学习添置设备，先看看教育优惠价。",
+      "benefit": "指定产品教育优惠价",
+      "eligibility": "符合 Apple 教育优惠条件的高校学生及教职员工，具体资格由 Apple 审核。",
+      "validity": "官方未公布统一结束日期；产品、价格及供应以购买页面为准。",
+      "sourceUrl": "https://www.apple.com.cn/cn-edu/store",
+      "limits": "并非所有产品均有教育优惠。不承诺固定折扣、库存或限时赠品。仅收录线上渠道，未核实任何线下门店。",
+      "verifiedAt": "2026-10-03",
+      "channel": "online",
+      "storeIds": [],
+      "sourceStatus": "public_page_checked",
+      "isTestData": false,
+      "status": "published",
+      "expiresAt": null
+    },
+    {
+      "id": "microsoft-office365-a1-education",
+      "merchant": "Microsoft",
+      "title": "Office 365 A1 教育版",
+      "category": "学习工具",
+      "summary": "符合条件的师生可免费使用核心 Office 网页应用。",
+      "benefit": "符合条件可免费使用",
+      "eligibility": "在符合条件的教育机构就读或工作，持有效教育邮箱。资格由 Microsoft 或学校确认。",
+      "validity": "在符合条件的教育机构就读或工作期间；官方可能重新验证资格。",
+      "sourceUrl": "https://www.microsoft.com/zh-cn/education/products/office",
+      "limits": "A1 包含 Word、Excel、PowerPoint 等网页版，不等于完整桌面 Office。不是所有学校邮箱均符合条件；机构审核可能需要时间。",
+      "verifiedAt": "2026-10-03",
+      "channel": "online",
+      "storeIds": [],
+      "sourceStatus": "public_page_checked",
+      "isTestData": false,
+      "status": "published",
+      "expiresAt": null
+    },
+    {
+      "id": "apple-music-cn-student",
+      "merchant": "Apple Music",
+      "title": "Apple Music 学生订阅",
+      "category": "影音",
+      "summary": "通过官方验证后，以学生优惠月费收听音乐。",
+      "benefit": "学生优惠 · 最多 48 个月",
+      "eligibility": "在学院或大学攻读大专、学士、研究生或同等高等教育课程，并通过官方学生身份验证。",
+      "validity": "学生优惠累计最多 48 个月，每年需重新验证学生身份。",
+      "sourceUrl": "https://support.apple.com/zh-cn/106008",
+      "limits": "需 Apple 账户及有效付款方式。实际价格以中国区订阅页面为准。资格失效、达到期限或未重新验证时可能转为个人方案续订。不承诺试用或附加权益。",
+      "verifiedAt": "2026-10-03",
+      "channel": "online",
+      "storeIds": [],
+      "sourceStatus": "public_page_checked",
+      "isTestData": false,
+      "status": "published",
+      "expiresAt": null
+    }
+  ],
+  "stores": []
+}
