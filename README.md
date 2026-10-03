@@ -33,6 +33,6 @@ Set-Location 'D:\Codex\01_App-应用开发\007_VaStudents\01_Repositories\VaStud
 
 ## 已有功能
 
-首次品牌/隐私说明、访客浏览、搜索分类、三项可追溯官方公开优惠、详情与来源外跳、收藏、个人偏好、手动选城、真实 OSM 地图嵌入与失败提示、未来门店严格适用数据模型、ID Wallet、合成身份生命周期与测试二维码、核销演示与真实记录分离。真实门店列表目前为零，不显示虚构商户或营业信息。
+首次品牌/隐私说明、访客浏览、搜索分类、四项可追溯官方公开优惠、详情与来源外跳、收藏、个人偏好、手动选城、真实 OSM 地图嵌入与失败提示、具体地点严格适用数据模型、ID Wallet、合成身份生命周期与测试二维码、核销演示与真实记录分离。已收录长沙岳麓书院一个真实学生票地点，地图标记为景点中心而非入口；官方到达路线外跳。不显示虚构商户或营业信息。
 
 见 `docs/DESIGN.md`、`docs/DATA_AND_MAP.md`、`docs/SIGNING.md`、`docs/VERIFICATION_BOUNDARIES.md` 和 `docs/STUDENT_BEANS_RESEARCH.md`。最终实测范围以 `05_Output/DELIVERY.md` 为准。

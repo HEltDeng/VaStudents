@@ -34,7 +34,7 @@ public class MainActivity extends Activity {
   SharedPreferences prefs;
   Set<String> favorites = new HashSet<>();
   String tab = "发现", category = "全部", query = "", detailId = null, city = "长沙";
-  String storeId = null;
+  String storeId = null, selectedMapStoreId = null, storeReturnOfferId = null;
   boolean ready = false, loadFailed = false, destroyed = false;
   int loadGeneration = 0;
   long lastExternal = 0;
@@ -67,6 +67,8 @@ public class MainActivity extends Activity {
       query = b.getString("query", "");
       detailId = b.getString("detailId");
       storeId = b.getString("storeId");
+      selectedMapStoreId = b.getString("selectedMapStoreId");
+      storeReturnOfferId = b.getString("storeReturnOfferId");
       scrollPosition = b.getInt("scrollPosition", 0);
     }
     if (Build.VERSION.SDK_INT >= 33)
@@ -87,6 +89,8 @@ public class MainActivity extends Activity {
     b.putString("query", query);
     b.putString("detailId", detailId);
     b.putString("storeId", storeId);
+    b.putString("selectedMapStoreId", selectedMapStoreId);
+    b.putString("storeReturnOfferId", storeReturnOfferId);
     b.putInt("scrollPosition", scroll == null ? 0 : scroll.getScrollY());
   }
 
@@ -376,7 +380,7 @@ public class MainActivity extends Activity {
     LinearLayout filters = row();
     filters.setPadding(dp(4), dp(4), dp(4), dp(4));
     filters.setBackground(bg(SURFACE, 24));
-    for (String c : new String[] {"全部", "数码", "学习工具", "影音"}) {
+    for (String c : new String[] {"全部", "数码", "学习工具", "影音", "文化出行"}) {
       TextView f = text(c, 14, category.equals(c) ? INK : MUTED, category.equals(c));
       f.setGravity(Gravity.CENTER);
       f.setPadding(dp(16), dp(10), dp(16), dp(10));
@@ -514,6 +518,7 @@ public class MainActivity extends Activity {
                   s.name,
                   false,
                   () -> {
+                    storeReturnOfferId = detailId;
                     detailId = null;
                     storeId = id;
                     render();
@@ -554,6 +559,13 @@ public class MainActivity extends Activity {
 
   void nearby() {
     header("附近", "手动选城，不读取你的定位");
+    java.util.List<OfferRepository.Store> available = availableStores();
+    OfferRepository.Store selected = null;
+    for (OfferRepository.Store item : available)
+      if (item.id.equals(selectedMapStoreId)) selected = item;
+    if (selected == null && !available.isEmpty()) selected = available.get(0);
+    final OfferRepository.Store selectedStore = selected;
+    selectedMapStoreId = selectedStore == null ? null : selectedStore.id;
     add(content, button(city + "  ·  切换城市", false, this::chooseCity));
     gap(content, 16);
     FrameLayout frame = new FrameLayout(this);
@@ -606,9 +618,17 @@ public class MainActivity extends Activity {
             checkTiles(current, status, 0);
           }
         });
-    double[] c = centre();
+    double[] c =
+        selectedStore != null && hasCoordinate(selectedStore)
+            ? new double[] {selectedStore.longitude, selectedStore.latitude}
+            : centre();
     String bbox = (c[0] - .045) + "," + (c[1] - .027) + "," + (c[0] + .045) + "," + (c[1] + .027);
-    map.loadUrl("https://www.openstreetmap.org/export/embed.html?bbox=" + bbox + "&layer=mapnik");
+    String marker =
+        selectedStore != null && hasCoordinate(selectedStore)
+            ? "&marker=" + selectedStore.latitude + "," + selectedStore.longitude
+            : "";
+    map.loadUrl(
+        "https://www.openstreetmap.org/export/embed.html?bbox=" + bbox + "&layer=mapnik" + marker);
     gap(content, 8);
     TextView attribution = text("© OpenStreetMap contributors", 12, MUTED, false);
     attribution.setMinHeight(dp(40));
@@ -625,24 +645,36 @@ public class MainActivity extends Activity {
             }));
     gap(content, 12);
     notice(
-        repository.stores.isEmpty() ? "暂无已核实的参与门店" : "参与门店以核实列表为准",
-        "地图中的地点不代表参与学生优惠。收录具体门店前，需要可追溯的适用范围证据。");
-    gap(content, 20);
-    for (OfferRepository.Store s : repository.stores.values()) {
-      boolean participates = false;
-      for (Offer o : repository.offers)
-        if (!o.isTestData && o.actionable(LocalDate.now()) && o.appliesTo(s.id))
-          participates = true;
-      if (s.city.equals(city) && participates)
+        available.isEmpty() ? "该城市暂无已核实的学生优惠地点" : "已核实 " + available.size() + " 个具体地点",
+        "公开优惠信息，不代表合作商户。普通地图地点不代表参与优惠；请按具体地点条件使用。");
+    for (OfferRepository.Store item : available) {
+      gap(content, 18);
+      add(content, text(item.name, 18, INK, true));
+      add(content, text(item.address, 14, MUTED, false));
+      add(content, text(item.coordinateNote, 12, MUTED, false));
+      for (Offer offer : repository.offers)
+        if (offer.actionable(LocalDate.now()) && offer.appliesTo(item.id))
+          add(content, text(offer.benefit, 15, INK, true));
+      if (hasCoordinate(item))
         add(
             content,
             button(
-                s.name,
+                "在地图上标记 " + item.name,
                 false,
                 () -> {
-                  storeId = s.id;
+                  selectedMapStoreId = item.id;
                   render();
                 }));
+      add(
+          content,
+          button(
+              "查看 " + item.name + " 详情",
+              true,
+              () -> {
+                storeReturnOfferId = null;
+                storeId = item.id;
+                render();
+              }));
     }
     add(
         content,
@@ -666,7 +698,11 @@ public class MainActivity extends Activity {
                 if (map != current) return;
                 try {
                   if (Integer.parseInt(value) > 0) {
-                    status.setText("地图已加载 · " + city + " · 非参与门店标记");
+                    OfferRepository.Store selected = repository.stores.get(selectedMapStoreId);
+                    status.setText(
+                        selected != null && selected.city.equals(city) && hasCoordinate(selected)
+                            ? "地图已加载 · 标记：" + selected.name
+                            : "地图已加载 · " + city + " · 未标记优惠地点");
                     return;
                   }
                 } catch (Exception ignored) {
@@ -676,6 +712,25 @@ public class MainActivity extends Activity {
               });
         },
         1500);
+  }
+
+  boolean hasCoordinate(OfferRepository.Store s) {
+    return !Double.isNaN(s.latitude)
+        && !Double.isNaN(s.longitude)
+        && !s.coordinateSourceUrl.isEmpty();
+  }
+
+  java.util.List<OfferRepository.Store> availableStores() {
+    java.util.List<OfferRepository.Store> result = new java.util.ArrayList<>();
+    for (OfferRepository.Store s : repository.stores.values()) {
+      if (!s.city.equals(city)) continue;
+      for (Offer offer : repository.offers)
+        if (offer.actionable(LocalDate.now()) && offer.appliesTo(s.id)) {
+          result.add(s);
+          break;
+        }
+    }
+    return result;
   }
 
   double[] centre() {
@@ -690,23 +745,47 @@ public class MainActivity extends Activity {
       return;
     }
     header(s.name, s.city);
-    notice("已核实的具体门店", "地址与适用优惠需以来源为准；营业时间未核实。");
+    notice("公开学生优惠地点", "仅适用于此地点，不代表合作或其他门店适用。开放与预约状态请核对官方。");
     paragraph("地址", s.address);
     paragraph("最近核实", s.verifiedAt);
     gap(content, 20);
     add(content, button("查看门店来源", false, () -> external(s.sourceUrl)));
     gap(content, 12);
-    add(
-        content,
-        button(
-            "前往目的地导航",
-            true,
-            () ->
-                external(
-                    "https://www.openstreetmap.org/directions?engine=fossgis_osrm_car&route=;"
-                        + s.latitude
-                        + ","
-                        + s.longitude)));
+    paragraph("位置说明", s.coordinateNote);
+    add(content, button("查看官方到达路线", true, () -> external(s.navigationUrl)));
+    if (hasCoordinate(s)) {
+      gap(content, 10);
+      add(
+          content,
+          button(
+              "在外部地图查看地点",
+              false,
+              () ->
+                  external(
+                      "https://www.openstreetmap.org/?mlat="
+                          + s.latitude
+                          + "&mlon="
+                          + s.longitude
+                          + "#map=17/"
+                          + s.latitude
+                          + "/"
+                          + s.longitude)));
+    }
+    gap(content, 20);
+    paragraph("此地点的学生优惠", "由官方核验资格，VaStudents 测试码不可使用。");
+    for (Offer offer : repository.offers)
+      if (offer.appliesTo(s.id)) {
+        add(
+            content,
+            button(
+                offer.title,
+                false,
+                () -> {
+                  storeId = null;
+                  detailId = offer.id;
+                  render();
+                }));
+      }
   }
 
   void wallet() {
@@ -1174,6 +1253,8 @@ public class MainActivity extends Activity {
       render();
     } else if (storeId != null) {
       storeId = null;
+      detailId = storeReturnOfferId;
+      storeReturnOfferId = null;
       render();
     } else if (detailId != null) {
       detailId = null;

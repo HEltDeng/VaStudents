@@ -172,6 +172,19 @@ public class IdentityFlowTest {
           a.render();
         });
     screen("10-profile");
+    inst.runOnMainSync(
+        () -> {
+          a.storeId = "yuelu-academy-changsha";
+          a.render();
+        });
+    screen("12-place-detail");
+    inst.runOnMainSync(
+        () -> {
+          a.storeId = null;
+          a.detailId = "yuelu-academy-student";
+          a.render();
+        });
+    screen("13-offline-offer");
   }
 
   @Test

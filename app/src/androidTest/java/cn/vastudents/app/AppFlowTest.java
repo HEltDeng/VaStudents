@@ -39,8 +39,8 @@ public class AppFlowTest {
   @Test
   public void catalogueAndNoLocationPermission() {
     assertTrue(a.ready);
-    assertEquals(3, a.repository.offers.size());
-    assertTrue(a.repository.stores.isEmpty());
+    assertEquals(4, a.repository.offers.size());
+    assertEquals(1, a.repository.stores.size());
     assertEquals(
         PackageManager.PERMISSION_DENIED,
         a.checkSelfPermission("android.permission.ACCESS_FINE_LOCATION"));
@@ -169,6 +169,77 @@ public class AppFlowTest {
         .check(
             androidx.test.espresso.assertion.ViewAssertions.matches(
                 androidx.test.espresso.matcher.ViewMatchers.isDisplayed()));
+  }
+
+  @Test
+  public void specificPlaceFilteringAndDetails() {
+    inst.runOnMainSync(
+        () -> {
+          a.city = "长沙";
+          assertEquals(1, a.availableStores().size());
+          Offer offer = a.find("yuelu-academy-student");
+          assertNotNull(offer);
+          assertTrue(offer.appliesTo("yuelu-academy-changsha"));
+          assertFalse(offer.appliesTo("unverified-other-branch"));
+          OfferRepository.Store place = a.availableStores().get(0);
+          assertTrue(a.hasCoordinate(place));
+          assertTrue(place.navigationUrl.startsWith("https://ylsy.hnu.edu.cn/"));
+          a.city = "北京";
+          assertTrue(a.availableStores().isEmpty());
+          a.city = "长沙";
+          a.storeId = place.id;
+          a.render();
+          assertTrue(contains(a.content, "学生半价票"));
+          assertTrue(contains(a.content, "不是已核实入口导航点"));
+          assertTrue(contains(a.content, "查看官方到达路线"));
+          a.goBack();
+          assertNull(a.storeId);
+          String prior = offer.status;
+          offer.status = "withdrawn";
+          assertTrue(a.availableStores().isEmpty());
+          offer.status = prior;
+        });
+  }
+
+  @Test
+  public void realTouchPlaceDetailsAndOfficialRouteIntent() {
+    final String[] opened = {null};
+    Instrumentation.ActivityMonitor monitor =
+        new Instrumentation.ActivityMonitor() {
+          @Override
+          public Instrumentation.ActivityResult onStartActivity(Intent intent) {
+            if (Intent.ACTION_VIEW.equals(intent.getAction())) {
+              opened[0] = intent.getDataString();
+              return new Instrumentation.ActivityResult(0, null);
+            }
+            return null;
+          }
+        };
+    inst.addMonitor(monitor);
+    try {
+      inst.runOnMainSync(
+          () -> {
+            a.city = "长沙";
+          });
+      androidx.test.espresso.Espresso.onView(
+              androidx.test.espresso.matcher.ViewMatchers.withContentDescription("附近"))
+          .perform(androidx.test.espresso.action.ViewActions.click());
+      androidx.test.espresso.Espresso.onView(
+              androidx.test.espresso.matcher.ViewMatchers.withText("查看 岳麓书院 详情"))
+          .perform(
+              androidx.test.espresso.action.ViewActions.scrollTo(),
+              androidx.test.espresso.action.ViewActions.click());
+      androidx.test.espresso.Espresso.onView(
+              androidx.test.espresso.matcher.ViewMatchers.withText("查看官方到达路线"))
+          .perform(
+              androidx.test.espresso.action.ViewActions.scrollTo(),
+              androidx.test.espresso.action.ViewActions.click());
+      assertEquals("https://ylsy.hnu.edu.cn/wbly/cgdn/jtl_.htm", opened[0]);
+      androidx.test.espresso.Espresso.pressBack();
+      assertNull(a.storeId);
+    } finally {
+      inst.removeMonitor(monitor);
+    }
   }
 
   static boolean contains(View v, String s) {

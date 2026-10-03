@@ -11,7 +11,15 @@ public final class OfferRepository {
   public final Map<String, Store> stores = new LinkedHashMap<>();
 
   public static final class Store {
-    public String id, name, address, city, sourceUrl, verifiedAt;
+    public String id,
+        name,
+        address,
+        city,
+        sourceUrl,
+        verifiedAt,
+        coordinateSourceUrl,
+        coordinateNote,
+        navigationUrl;
     public double latitude, longitude;
   }
 
@@ -75,8 +83,13 @@ public final class OfferRepository {
       s.city = j.getString("city");
       s.sourceUrl = j.getString("sourceUrl");
       s.verifiedAt = j.getString("verifiedAt");
-      s.latitude = j.getDouble("latitude");
-      s.longitude = j.getDouble("longitude");
+      s.latitude = j.optDouble("latitude", Double.NaN);
+      s.longitude = j.optDouble("longitude", Double.NaN);
+      s.coordinateSourceUrl = j.optString("coordinateSourceUrl", "");
+      s.coordinateNote = j.optString("coordinateNote", "入口点位尚未核实");
+      s.navigationUrl = j.optString("navigationUrl", s.sourceUrl);
+      if (!"https".equals(new URI(s.navigationUrl).getScheme()))
+        throw new IOException("HTTPS navigation required");
       if (Math.abs(s.latitude) > 90 || Math.abs(s.longitude) > 180)
         throw new IOException("Invalid coordinate");
       java.time.LocalDate.parse(s.verifiedAt);

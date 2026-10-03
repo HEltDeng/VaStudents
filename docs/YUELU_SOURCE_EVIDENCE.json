@@ -1,0 +1,60 @@
+{
+  "checkedAt": "2026-10-03",
+  "nominatimQueryUrl": "https://nominatim.openstreetmap.org/search?q=%E5%B2%B3%E9%BA%93%E4%B9%A6%E9%99%A2%20%E9%95%BF%E6%B2%99&format=jsonv2&addressdetails=1&limit=3",
+  "coordinateEvidenceNote": "上述Nominatim请求已成功并返回下方结果；OSM way网页本轮web工具不可读，不应声称该网页已人工核查。",
+  "offer": {
+    "id": "yuelu-academy-student-ticket",
+    "merchant": "岳麓书院",
+    "title": "岳麓书院学生半价票",
+    "category": "文化出行",
+    "summary": "符合条件的全日制本科及以下在校学生，凭有效证件购买半价门票。",
+    "benefit": "学生半价票 20 元/人次",
+    "eligibility": "全日制大学本科及以下学历在校学生，凭有效证件。未满18周岁的中国公民另适用官方免票政策，仍须预约。",
+    "validity": "2026-10-03 官方在用购票须知仍列明此政策，页面未公布统一结束日期。实际预约日期、余票和临时开放安排以官方最新公告为准。",
+    "sourceUrl": "https://ylsy.hnu.edu.cn/wbly/cgdn/zxdp.htm",
+    "limits": "须通过岳麓书院官方微信公众号实名预约，含优惠票游客；可提前4天（含当天）预约。参观时携带预约所用证件原件及符合学生优惠的有效证件。未预约不得入院；不承诺当日有票。VaStudents 不售票、不代预约，不提供替代官方证件的核销码。",
+    "verifiedAt": "2026-10-03",
+    "channel": "offline",
+    "storeIds": ["yuelu-academy-changsha"],
+    "sourceStatus": "public_page_checked",
+    "isTestData": false,
+    "status": "published",
+    "expiresAt": null
+  },
+  "place": {
+    "id": "yuelu-academy-changsha",
+    "name": "岳麓书院",
+    "city": "长沙",
+    "address": "湖南省长沙市岳麓区登高路，湖南大学社区，岳麓书院",
+    "addressSourceUrl": "https://www.openstreetmap.org/way/272516791",
+    "addressEvidenceType": "OSM 公开地址，非官方门牌号；不补造编号",
+    "sourceUrl": "https://ylsy.hnu.edu.cn/wbly/cgdn/jtl_.htm",
+    "verifiedAt": "2026-10-03",
+    "latitude": 28.1839094,
+    "longitude": 112.9351255,
+    "coordinateSystem": "WGS84",
+    "coordinateSourceUrl": "https://www.openstreetmap.org/way/272516791",
+    "coordinateMeaning": "Nominatim 返回的景点地点位置，不是已核实游客入口；仅用于地图地点标记",
+    "entranceCoordinateVerified": false,
+    "directionsUrl": "https://ylsy.hnu.edu.cn/wbly/cgdn/jtl_.htm",
+    "entranceNotes": "官方说明：右门（前门，风雩亭附近）为观众参观入口；西门（近爱晚亭）可进出；文庙照壁侧门仅作出口。请按官方交通指引与现场标识到达。"
+  },
+  "evidence": [
+    {"url": "https://ylsy.hnu.edu.cn/wbly/cgdn/zxdp.htm", "supports": "全价40元、半价20元、学生适用条件、实名预约、4天预约范围"},
+    {"url": "https://ylsy.hnu.edu.cn/wbly/cgdn/ylxz.htm", "supports": "书院未授权任何机构代售代购代销；预约证件原件与入院核验要求"},
+    {"url": "https://ylsy.hnu.edu.cn/wbly/cgdn/jtl_.htm", "supports": "具体入口及出口、官方交通路线"},
+    {"url": "https://www.openstreetmap.org/way/272516791", "supports": "OSM景点对象；地址与WGS84地点坐标由一次Nominatim公开查询返回"}
+  ],
+  "nominatimResult": {
+    "osm_type": "way",
+    "osm_id": 272516791,
+    "lat": "28.1839094",
+    "lon": "112.9351255",
+    "category": "tourism",
+    "type": "attraction",
+    "name": "岳麓书院",
+    "display_name": "岳麓书院, 登高路, 湖南大学社区, 桔子洲街道, 岳麓区, 湘江新区, 岳麓区, 长沙市, 湖南省, 410082, 中国",
+    "boundingbox": ["28.1824649", "28.1853812", "112.9338605", "112.9364781"],
+    "licence": "Data © OpenStreetMap contributors, ODbL 1.0. http://osm.org/copyright"
+  }
+}

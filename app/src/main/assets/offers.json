@@ -57,7 +57,42 @@
       "isTestData": false,
       "status": "published",
       "expiresAt": null
+    },
+    {
+      "id": "yuelu-academy-student",
+      "merchant": "岳麓书院",
+      "title": "岳麓书院学生半价票",
+      "category": "文化出行",
+      "summary": "符合条件的在校学生，可预约购买书院半价门票。",
+      "benefit": "学生半价票 20 元 / 人次",
+      "eligibility": "全日制本科及以下学历在校学生，须持有效证件；研究生不在此条学生半价条件内。未满18周岁的中国公民另有免票政策，仍须预约。",
+      "validity": "官方现行购票须知未列统一结束日期；具体开放、预约名额及政策以官方最新公告为准。",
+      "sourceUrl": "https://ylsy.hnu.edu.cn/wbly/cgdn/zxdp.htm",
+      "limits": "仅适用于长沙岳麓书院，不代表湖南大学其他场所。常规全价40元、半价20元。散客通过“岳麓书院”官方微信公众号实名预约，可提前4天（含当天）；无预约不能入院。现场须出示有效证件，VaStudents 测试码不可使用。",
+      "verifiedAt": "2026-10-03",
+      "channel": "offline",
+      "storeIds": [
+        "yuelu-academy-changsha"
+      ],
+      "sourceStatus": "public_page_checked",
+      "isTestData": false,
+      "status": "published",
+      "expiresAt": null
     }
   ],
-  "stores": []
+  "stores": [
+    {
+      "id": "yuelu-academy-changsha",
+      "name": "岳麓书院",
+      "address": "湖南省长沙市岳麓区湖南大学校园内；前门（右门）近风雩亭。",
+      "city": "长沙",
+      "sourceUrl": "https://ylsy.hnu.edu.cn/wbly/cgdn/jtl_.htm",
+      "verifiedAt": "2026-10-03",
+      "latitude": 28.1839094,
+      "longitude": 112.9351255,
+      "coordinateSourceUrl": "https://www.openstreetmap.org/way/272516791",
+      "coordinateNote": "标记为 OSM 书院地点中心，不是已核实入口导航点。请按官方交通指引前往前门或可通行入口。",
+      "navigationUrl": "https://ylsy.hnu.edu.cn/wbly/cgdn/jtl_.htm"
+    }
+  ]
 }
