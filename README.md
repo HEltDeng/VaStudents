@@ -1,6 +1,6 @@
 # VaStudents
 
-中国学生公开优惠聚合的原生 Android 开发预览。名称精确为 **VaStudents**。本项目独立于其他校园与 YEATS 项目，无 GitHub remote、云部署或正式发布。
+中国学生公开优惠聚合的原生 Android 开发预览。名称精确为 **VaStudents**。本项目独立于其他校园与 YEATS 项目，GitHub 私有仓库为 HEltDeng/VaStudents；没有云部署或正式发布。
 
 ## 本地路径
 
@@ -36,3 +36,17 @@ Set-Location 'D:\Codex\01_App-应用开发\007_VaStudents\01_Repositories\VaStud
 首次品牌/隐私说明、访客浏览、搜索分类、四项可追溯官方公开优惠、详情与来源外跳、收藏、个人偏好、手动选城、真实 OSM 地图嵌入与失败提示、具体地点严格适用数据模型、ID Wallet、合成身份生命周期与测试二维码、核销演示与真实记录分离。已收录长沙岳麓书院一个真实学生票地点，地图标记为景点中心而非入口；官方到达路线外跳。不显示虚构商户或营业信息。
 
 见 `docs/DESIGN.md`、`docs/DATA_AND_MAP.md`、`docs/SIGNING.md`、`docs/VERIFICATION_BOUNDARIES.md` 和 `docs/STUDENT_BEANS_RESEARCH.md`。最终实测范围以 `05_Output/DELIVERY.md` 为准。
+
+## Mac 恢复
+
+```sh
+git clone --branch feature/initial-preview https://github.com/HEltDeng/VaStudents.git
+cd VaStudents
+export JAVA_HOME=$(/usr/libexec/java_home -v 17)
+export ANDROID_HOME="$HOME/Library/Android/sdk"
+export ANDROID_USER_HOME="$PWD/.local/android-user"
+printf 'sdk.dir=%s\n' "$ANDROID_HOME" > local.properties
+sh ./gradlew :app:assemblePreviewDebug
+```
+
+先安装 SDK 36.1 与 build-tools 36.1.0。仓库包含 Gradle Wrapper，构建需要联网下载锁定版本工具和依赖；`.local`、local.properties、签名及真实学生材料不提交。该构建是开发预览，不是正式签名发行。
